@@ -52,4 +52,18 @@ export const env = envsafe({
     default: '',
     allowEmpty: true,
   }),
+  SENTRY_DSN: str({
+    desc: 'Sentry DSN to check each backup in to a Sentry cron monitor. Unset, no check-ins are sent.',
+    default: '',
+    allowEmpty: true,
+  }),
+  SENTRY_MONITOR_SLUG: str({
+    desc: 'The Sentry cron monitor to check in to; created on the first check-in.',
+    default: 'database-backup',
+  }),
+  SENTRY_MONITOR_SCHEDULE: str({
+    desc: 'The schedule Sentry expects a backup on, as a cron expression. In single-shot mode, the platform cron schedule.',
+    default: '',
+    allowEmpty: true,
+  }),
 })

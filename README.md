@@ -33,3 +33,10 @@ A simple NodeJS application to backup your PostgreSQL database to S3 via a cron.
 - `SUPPORT_OBJECT_LOCK` - Enables support for buckets with object lock by providing an MD5 hash with the backup file.
 
 - `BACKUP_OPTIONS` - Add any valid pg_dump option, supported pg_dump options can be found [here](https://www.postgresql.org/docs/current/app-pgdump.html). Example: `--exclude-table=pattern`
+
+- `SENTRY_DSN` - Checks each backup in to a [Sentry cron monitor](https://docs.sentry.io/product/crons/), which opens an issue when a backup fails, runs too long or does not start. Unset, nothing is sent.
+
+- `SENTRY_MONITOR_SLUG` - The Sentry monitor's slug, created on the first check-in. Default `database-backup`.
+
+- `SENTRY_MONITOR_SCHEDULE` - The cron schedule Sentry expects backups on. In `SINGLE_SHOT_MODE`, set it to the platform's cron schedule. Defaults to `BACKUP_CRON_SCHEDULE`.
+
