@@ -1,12 +1,13 @@
 import { CronJob } from "cron";
 import { backup } from "./backup.js";
 import { env } from "./env.js";
+import { monitored } from "./sentry.js";
 
 console.log("NodeJS Version: " + process.version);
 
 const tryBackup = async () => {
   try {
-    await backup();
+    await monitored(backup);
   } catch (error) {
     console.error("Error while running backup: ", error);
     process.exit(1);
