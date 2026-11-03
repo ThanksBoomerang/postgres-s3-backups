@@ -7,7 +7,6 @@ import path from "path";
 import os from "os";
 
 import { env } from "./env.js";
-import { createMD5 } from "./util.js";
 
 const uploadToS3 = async ({ name, path }: { name: string, path: string }) => {
   console.log("Uploading backup to S3...");
@@ -29,20 +28,15 @@ const uploadToS3 = async ({ name, path }: { name: string, path: string }) => {
     name = env.BUCKET_SUBFOLDER + "/" + name;
   }
 
-  let params: PutObjectCommandInput = {
+  // CRC32 on every request: S3 checks each part on arrival, and a bucket with
+  // Object Lock refuses uploads that carry no checksum. lib-storage copies
+  // these params onto every UploadPart, so one whole-file Content-MD5 (the old
+  // SUPPORT_OBJECT_LOCK option) was wrong for any multipart upload.
+  const params: PutObjectCommandInput = {
     Bucket: bucket,
     Key: name,
     Body: createReadStream(path),
-  }
-
-  if (env.SUPPORT_OBJECT_LOCK) {
-    console.log("MD5 hashing file...");
-
-    const md5Hash = await createMD5(path);
-
-    console.log("Done hashing file");
-
-    params.ContentMD5 = Buffer.from(md5Hash, 'hex').toString('base64');
+    ChecksumAlgorithm: "CRC32",
   }
 
   const client = new S3Client(clientOptions);
