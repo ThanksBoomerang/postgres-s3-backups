@@ -42,11 +42,6 @@ export const env = envsafe({
     default: false,
     allowEmpty: true,
   }),
-  // This is both time consuming and resource intensive so we leave it disabled by default
-  SUPPORT_OBJECT_LOCK: bool({
-    desc: 'Enables support for buckets with object lock by providing an MD5 hash with the backup file',
-    default: false
-  }),
   BACKUP_OPTIONS: str({
     desc: 'Any valid pg_dump option.',
     default: '',
